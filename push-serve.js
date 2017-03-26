@@ -2,7 +2,7 @@
 
 const fs = require("fs");
 const path = require("path");
-const debug = require("debug")("http2push-gae");
+const debug = require("debug")("http2push");
 const log = debug;
 const err = (...args) => { debug("Error:", ...args); };
 const express = require("express");
