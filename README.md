@@ -2,8 +2,8 @@
 
 This is a demo repo that shows HTTP/2 Push directives being correctly created and served from upgraded Polymer CLI branches. See:
 
-    - [Push Manifest generating polymer-build](https://github.com/slightlyoff/polymer-build/tree/push-manifest)
-    - [Push Manifest generating polymer-cli](https://github.com/slightlyoff/polymer-cli/tree/push)
+  - [Push Manifest generating polymer-build](https://github.com/slightlyoff/polymer-build/tree/push-manifest)
+  - [Push Manifest generating polymer-cli](https://github.com/slightlyoff/polymer-cli/tree/push)
 
 ### Setup
 
