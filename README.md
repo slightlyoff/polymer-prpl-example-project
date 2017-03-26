@@ -30,11 +30,9 @@ Next, checkout the push manifest branch of Polymer CLI and switch to the push br
 
     git clone https://github.com/slightlyoff/polymer-cli.git
     cd polymer-cli
-    npm install
-    git checkout push
     npm link ../polymer-build
+    git checkout push
     npm install
-    npm test
     cd ..
 
 ### Build
@@ -43,6 +41,7 @@ Move into the example app directory, install the deps we need, and invoke the po
 
     cd polymer-prpl-example-project
     npm install
+    bower install
     ./../polymer-cli/bin/polymer.js build
 
 ### Start the one-off Node server for Push

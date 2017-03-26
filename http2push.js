@@ -112,7 +112,8 @@ module.exports = function(options) {
       return;
     }
     let headerValue = getHeaderValue(path, data);
-    // log("headerValue:", headerValue);
+    log("path:", path);
+    log("headerValue:", headerValue);
 
     // TODO(slightlyoff): cap total size
     preloadValueCache.set(path, headerValue);
@@ -126,8 +127,6 @@ module.exports = function(options) {
     // Simple matching. Will need to improve.
     if (!(isSingleFileManifest || fileList.includes(path))) {
       log("not setting preload value");
-      log(fileList);
-      log(path);
       return; // TODO(slightlyoff): log for debugging?
     }
     if (isSingleFileManifest) { path = "*"; }
