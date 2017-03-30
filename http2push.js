@@ -30,7 +30,7 @@ const err = (...args) => { debug("Error:", ...args); };
 //  - Restrict header setting to navigations
 //  - Investigate bloom filter impl in middleware variant
 
-const getHeaderValue = (path, pushDataMap) => {
+const getLinkHeaderValue = (path, pushDataMap) => {
   let items = [];
   let files = pushDataMap.get(path);
   for (let f of Object.keys(files)) {
@@ -38,6 +38,19 @@ const getHeaderValue = (path, pushDataMap) => {
       items.push(`<${f}>; rel=preload; as=${files[f].type}`);
     } else {
       items.push(`<${f}>; rel=preload`);
+    }
+  }
+  return items.join(", ");
+};
+
+const getXACHeaderValue = (path, pushDataMap) => {
+  let items = [];
+  let files = pushDataMap.get(path);
+  for (let f of Object.keys(files)) {
+    if (files[f].hasOwnProperty("weight")) {
+      items.push(`"${f}":${files[f].weight}`);
+    } else {
+      items.push(`"${f}"`);
     }
   }
   return items.join(", ");
@@ -105,19 +118,27 @@ module.exports = function(options) {
   }
 
 
-  let preloadValueCache = new Map();
+  // TODO(slightlyoff): determine if we're in GAE or behind GFE and only serve
+  //                    XAC values there.
+  let linkValueCache = new Map();
+  let xacValueCache = new Map();
   let setPreloadValueFromData = function(res, path, data) {
-    if (preloadValueCache.has(path)) {
-      res.set("Link", preloadValueCache.get(path));
+    if (linkValueCache.has(path)) {
+      res.set("Link", linkValueCache.get(path));
+      res.set("X-Associated-Content", xacValueCache.get(path));
       return;
     }
-    let headerValue = getHeaderValue(path, data);
+    const linkValue = getLinkHeaderValue(path, data);
+    const xacValue = getXACHeaderValue(path, data);
     log("path:", path);
-    log("headerValue:", headerValue);
+    log("Link header value:", linkValue);
+    log("X-Associated-Content value:", linkValue);
 
     // TODO(slightlyoff): cap total size
-    preloadValueCache.set(path, headerValue);
-    res.set("Link", headerValue);
+    linkValueCache.set(path, linkValue);
+    xacValueCache.set(path, xacValue);
+    res.set("Link", linkValue);
+    res.set("X-Associated-Content", xacValue);
   };
 
   // TODO(slightlyoff): only cache a single string if we have a single-file
